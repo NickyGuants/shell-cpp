@@ -2,6 +2,7 @@
 #include <sstream>
 #include <string>
 #include <vector>
+#include <algorithm>
 
 std::vector<std::string> split(const std::string &str)
 {
@@ -21,6 +22,8 @@ int main() {
   // Flush after every std::cout / std:cerr
   std::cout << std::unitbuf;
   std::cerr << std::unitbuf;
+
+  std::vector<std::string> built_in_command = {"echo", "exit", "type"};
 
   while (true)
   {
@@ -49,10 +52,25 @@ int main() {
         std::cout << tokens[i];
       }
       std::cout << std::endl;
+    }else if(command == "type"){
+      if(tokens.size() < 2){
+        std::cerr << "type command requires an argument" << std::endl;
+        continue;
+      }
+
+      auto command_arg = tokens[1];
+      if (std::find(built_in_command.begin(), built_in_command.end(), command_arg) != built_in_command.end())
+      {
+        std::cout << command_arg << " is a shell builtin" << std::endl;
+      }
+      else
+      {
+        std::cout << command_arg + ": not found" << std::endl;
+      }
     }
     else
     {
-      std::cout << command + ": command not found" + "\n";
+      std::cout << command + ": command not found" << std::endl;
     }
   }
   
